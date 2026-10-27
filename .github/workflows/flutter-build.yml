@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 env:
-  FLUTTER_VERSION: "3.24.5"
+  FLUTTER_VERSION: "3.19.6"
   VERSION: "1.4.6"
 
 jobs:
@@ -32,12 +32,6 @@ jobs:
           channel: "stable"
           flutter-version: ${{ env.FLUTTER_VERSION }}
 
-      - name: Patch flutter
-        shell: bash
-        run: |
-          cd $(dirname $(dirname $(which flutter)))
-          [[ "3.24.5" == ${{ env.FLUTTER_VERSION }} ]] && git apply ${{ github.workspace }}/.github/patches/flutter_3.24.4_dropdown_menu_enableFilter.diff
-
       - name: Build web
         shell: bash
         run: |
@@ -56,10 +50,8 @@ jobs:
           popd
 
           pushd flutter
-          flutter build web --release --pwa-strategy=none
+          flutter build web --release
           cd build
-          cp ../web/README.md web
-          echo -e "\n\nThis build is for preview and not full functionality." >> web/README.md
           dir_name="rustdesk-${{ env.VERSION }}-${{ env.RELEASE_NAME }}"
           mv web "${dir_name}" && tar czf "${dir_name}".tar.gz "${dir_name}"
           sha256sum "${dir_name}".tar.gz
