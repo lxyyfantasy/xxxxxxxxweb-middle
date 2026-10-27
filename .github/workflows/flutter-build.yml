@@ -56,7 +56,7 @@ jobs:
           popd
 
           pushd flutter
-          flutter build web --release
+          flutter build web --release --pwa-strategy=none
           cd build
           cp ../web/README.md web
           echo -e "\n\nThis build is for preview and not full functionality." >> web/README.md
